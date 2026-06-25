@@ -101,6 +101,11 @@
         padding: 0.6rem 1.5rem;
         display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
       }
+      .pillar-nav { display: flex; gap: 0.25rem; }
+      .pillar-link { font-family: var(--font); font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 6px; color: #d4d4d8; text-decoration: none; transition: all 0.2s; }
+      .pillar-link:hover { background: #27272a; color: #fff; text-decoration: none; }
+      .pillar-link.active { background: #3b82f6; color: #fff; }
+      .switcher-divider { width: 1px; height: 20px; background: #3f3f46; align-self: center; margin: 0 0.25rem; }
       .design-switcher label { color: #a1a1aa; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
       .design-switcher .buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; }
       .design-switcher button {
@@ -407,6 +412,12 @@
   <body>
     <!-- Design Switcher -->
     <nav class="design-switcher">
+      <div class="pillar-nav">
+        <a href="index.html" class="pillar-link active" title="Developer Tools">Tools</a>
+        <a href="portfolio/index.html" class="pillar-link" title="Portfolio Themes">Portfolio</a>
+        <a href="resume/index.html" class="pillar-link" title="Resume Themes">Resume</a>
+      </div>
+      <span class="switcher-divider"></span>
       <label>Pick a design:</label>
       <div class="buttons">
         <button class="active" data-design="d1">1. Tool Directory</button>
