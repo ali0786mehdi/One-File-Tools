@@ -1377,6 +1377,300 @@ ${has(volunteer) ? `<section>
 </html>`;
   }
 
+  // ── Resume theme: Modern ──
+
+  function buildResumeModern(profile) {
+    const p = profile.personal || {};
+    const contact = p.contact || {};
+    const location = p.location || {};
+    const social = p.social || {};
+    const skills = profile.skills || [];
+    const experience = profile.experience || [];
+    const education = profile.education || [];
+    const languages = profile.languages || [];
+    const projects = profile.projects || [];
+    const summary = profile.summary || "";
+
+    const e = escapeHtml;
+    const displayName = p.displayName || [p.firstName, p.lastName].filter(Boolean).join(" ") || "Your Name";
+    const title = p.title || "";
+    const locationStr = [location.city, location.state, location.country].filter(Boolean).join(", ");
+
+    // Sidebar items
+    const contactItems = [];
+    if (has(contact.email)) contactItems.push(`<li><strong>Email</strong><br><a href="mailto:${e(contact.email)}">${e(contact.email)}</a></li>`);
+    if (has(contact.phone)) contactItems.push(`<li><strong>Phone</strong><br>${e(contact.phone)}</li>`);
+    if (has(contact.website)) contactItems.push(`<li><strong>Website</strong><br><a href="${e(contact.website)}">${e(contact.website.replace(/^https?:\/\//, ""))}</a></li>`);
+    if (has(social.linkedin)) contactItems.push(`<li><strong>LinkedIn</strong><br><a href="${e(social.linkedin)}">linkedin.com/in</a></li>`);
+    if (has(social.github)) contactItems.push(`<li><strong>GitHub</strong><br><a href="${e(social.github)}">github.com</a></li>`);
+    if (has(locationStr)) contactItems.push(`<li><strong>Location</strong><br>${e(locationStr)}</li>`);
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${e(displayName)} — Resume</title>
+<style>
+@page { size: A4; margin: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10pt; line-height: 1.5; color: #333; background: #e5e7eb; }
+a { color: #0f172a; text-decoration: none; }
+.page { max-width: 210mm; min-height: 297mm; margin: 2rem auto; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: grid; grid-template-columns: 32% 68%; }
+
+/* Sidebar */
+.sidebar { background: #f8fafc; padding: 40px 30px; border-right: 1px solid #e2e8f0; }
+.sidebar-section { margin-bottom: 24px; }
+.sidebar-section h2 { font-size: 11pt; color: #0f172a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 4px; border-bottom: 2px solid #cbd5e1; }
+.contact-list { list-style: none; }
+.contact-list li { margin-bottom: 12px; font-size: 9.5pt; color: #475569; line-height: 1.4; }
+.contact-list strong { color: #0f172a; }
+.sidebar-skills { margin-bottom: 16px; }
+.sidebar-skills h3 { font-size: 10pt; color: #0f172a; margin-bottom: 4px; }
+.sidebar-skills p { font-size: 9.5pt; color: #475569; }
+
+/* Main Content */
+.main { padding: 40px 40px 40px 30px; }
+header { margin-bottom: 24px; }
+h1 { font-size: 28pt; font-weight: 700; color: #0f172a; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 4px; }
+.title { font-size: 14pt; color: #3b82f6; font-weight: 500; }
+
+.section { margin-bottom: 20px; }
+.section h2 { font-size: 12pt; color: #0f172a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; padding-bottom: 4px; border-bottom: 2px solid #cbd5e1; }
+.summary { font-size: 10pt; color: #334155; margin-bottom: 16px; }
+
+.item { margin-bottom: 16px; }
+.item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.item-title { font-size: 11pt; font-weight: 700; color: #0f172a; }
+.item-dates { font-size: 9.5pt; color: #64748b; font-weight: 600; }
+.item-subtitle { font-size: 10pt; color: #3b82f6; font-weight: 500; margin-bottom: 6px; }
+.item-desc { font-size: 9.5pt; color: #334155; margin-bottom: 6px; }
+.item-highlights { list-style: disc; padding-left: 16px; font-size: 9.5pt; color: #334155; }
+.item-highlights li { margin-bottom: 3px; }
+
+@media screen and (max-width: 768px) {
+  .page { grid-template-columns: 1fr; margin: 0; box-shadow: none; }
+  .sidebar { border-right: none; border-bottom: 1px solid #e2e8f0; padding: 30px; }
+  .main { padding: 30px; }
+}
+
+@media print {
+  body { background: #fff; }
+  .page { margin: 0; box-shadow: none; min-height: auto; grid-template-columns: 32% 68%; }
+  .sidebar { background: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .section, .item { break-inside: avoid; }
+  h2 { break-after: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h2>Contact</h2>
+      <ul class="contact-list">
+        ${contactItems.join("\n")}
+      </ul>
+    </div>
+    
+    ${has(skills) ? `
+    <div class="sidebar-section">
+      <h2>Skills</h2>
+      ${skills.filter(g => has(g.items)).map(g => `
+      <div class="sidebar-skills">
+        <h3>${e(g.category)}</h3>
+        <p>${g.items.map(i => e(i.name)).join(", ")}</p>
+      </div>`).join("")}
+    </div>` : ""}
+    
+    ${has(education) ? `
+    <div class="sidebar-section">
+      <h2>Education</h2>
+      ${education.map(edu => `
+      <div class="sidebar-skills">
+        <h3>${e(edu.degree)}</h3>
+        <p style="color:#0f172a;font-weight:500">${e(edu.institution)}</p>
+        <p>${has(edu.endDate) ? fmtDate(edu.endDate) : ""}</p>
+      </div>`).join("")}
+    </div>` : ""}
+
+    ${has(languages) ? `
+    <div class="sidebar-section">
+      <h2>Languages</h2>
+      ${languages.map(l => `<p style="font-size:9.5pt;margin-bottom:4px"><strong>${e(l.language)}</strong> <span style="color:#64748b">(${e(l.proficiency)})</span></p>`).join("")}
+    </div>` : ""}
+  </aside>
+
+  <main class="main">
+    <header>
+      <h1>${e(displayName)}</h1>
+      ${has(title) ? `<div class="title">${e(title)}</div>` : ""}
+    </header>
+
+    ${has(summary) ? `
+    <section class="section">
+      <h2>Summary</h2>
+      <p class="summary">${e(summary)}</p>
+    </section>` : ""}
+
+    ${has(experience) ? `
+    <section class="section">
+      <h2>Experience</h2>
+      ${experience.map(exp => `
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">${e(exp.role)}</div>
+          <div class="item-dates">${fmtDate(exp.startDate)} – ${exp.current ? "Present" : fmtDate(exp.endDate)}</div>
+        </div>
+        <div class="item-subtitle">${e(exp.company)}${has(exp.location) ? ` | ${e(exp.location)}` : ""}</div>
+        ${has(exp.description) ? `<p class="item-desc">${e(exp.description)}</p>` : ""}
+        ${has(exp.highlights) ? `<ul class="item-highlights">${exp.highlights.map(h => `<li>${e(h)}</li>`).join("")}</ul>` : ""}
+      </div>`).join("")}
+    </section>` : ""}
+
+    ${has(projects) ? `
+    <section class="section">
+      <h2>Projects</h2>
+      ${projects.filter(p => p.featured).map(proj => `
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">${e(proj.name)}</div>
+          ${has(proj.year) ? `<div class="item-dates">${e(String(proj.year))}</div>` : ""}
+        </div>
+        <div class="item-subtitle">${has(proj.tagline) ? e(proj.tagline) : ""}</div>
+        ${has(proj.description) ? `<p class="item-desc">${e(proj.description)}</p>` : ""}
+      </div>`).join("")}
+    </section>` : ""}
+  </main>
+</div>
+</body>
+</html>`;
+  }
+
+  // ── Resume theme: Compact ──
+
+  function buildResumeCompact(profile) {
+    const p = profile.personal || {};
+    const contact = p.contact || {};
+    const social = p.social || {};
+    const skills = profile.skills || [];
+    const experience = profile.experience || [];
+    const education = profile.education || [];
+    const projects = profile.projects || [];
+    
+    const e = escapeHtml;
+    const displayName = p.displayName || [p.firstName, p.lastName].filter(Boolean).join(" ") || "Your Name";
+    
+    const contactItems = [];
+    if (has(contact.email)) contactItems.push(e(contact.email));
+    if (has(contact.phone)) contactItems.push(e(contact.phone));
+    if (has(contact.website)) contactItems.push(e(contact.website.replace(/^https?:\/\//, "")));
+    if (has(social.github)) contactItems.push("github.com/" + e(social.github.split('/').pop()));
+    if (has(social.linkedin)) contactItems.push("in/" + e(social.linkedin.split('/').pop()));
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${e(displayName)} — Resume</title>
+<style>
+@page { size: A4; margin: 12mm 15mm; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Georgia", serif; font-size: 9.5pt; line-height: 1.35; color: #000; background: #fff; }
+.page { max-width: 210mm; margin: 0 auto; padding: 20px; }
+
+header { text-align: center; margin-bottom: 12px; }
+h1 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 18pt; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
+.contact-line { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #333; }
+
+section { margin-bottom: 12px; }
+h2 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10pt; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid #000; margin-bottom: 6px; padding-bottom: 2px; }
+
+.entry { margin-bottom: 8px; }
+.row { display: flex; justify-content: space-between; align-items: baseline; }
+.bold { font-weight: 700; }
+.italic { font-style: italic; }
+.dates { font-size: 9pt; white-space: nowrap; }
+
+ul { padding-left: 16px; margin-top: 2px; }
+li { margin-bottom: 2px; }
+
+.skills-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.skill-item { margin-right: 8px; }
+
+@media print {
+  .page { padding: 0; }
+  .entry { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>${e(displayName)}</h1>
+    <div class="contact-line">${contactItems.join(" &nbsp;|&nbsp; ")}</div>
+  </header>
+
+  ${has(education) ? `
+  <section>
+    <h2>Education</h2>
+    ${education.map(edu => `
+    <div class="entry">
+      <div class="row">
+        <span class="bold">${e(edu.institution)}</span>
+        <span class="dates">${has(edu.startDate) ? fmtDate(edu.startDate) + " - " : ""}${has(edu.endDate) ? fmtDate(edu.endDate) : "Present"}</span>
+      </div>
+      <div class="row">
+        <span class="italic">${e(edu.degree)}${has(edu.field) ? ` in ${e(edu.field)}` : ""}</span>
+        ${has(edu.gpa) ? `<span>GPA: ${e(edu.gpa)}</span>` : ""}
+      </div>
+    </div>`).join("")}
+  </section>` : ""}
+
+  ${has(experience) ? `
+  <section>
+    <h2>Experience</h2>
+    ${experience.map(exp => `
+    <div class="entry">
+      <div class="row">
+        <span class="bold">${e(exp.role)}</span>
+        <span class="dates">${fmtDate(exp.startDate)} - ${exp.current ? "Present" : fmtDate(exp.endDate)}</span>
+      </div>
+      <div class="row">
+        <span class="italic">${e(exp.company)}${has(exp.location) ? `, ${e(exp.location)}` : ""}</span>
+      </div>
+      ${has(exp.highlights) ? `<ul>${exp.highlights.map(h => `<li>${e(h)}</li>`).join("")}</ul>` : ""}
+    </div>`).join("")}
+  </section>` : ""}
+
+  ${has(projects) ? `
+  <section>
+    <h2>Projects</h2>
+    ${projects.filter(p => p.featured).map(proj => `
+    <div class="entry">
+      <div class="row">
+        <span class="bold">${e(proj.name)}</span>
+        <span class="dates">${has(proj.techStack) ? e(proj.techStack.join(", ")) : ""}</span>
+      </div>
+      ${has(proj.description) ? `<ul><li>${e(proj.description)}</li></ul>` : ""}
+    </div>`).join("")}
+  </section>` : ""}
+
+  ${has(skills) ? `
+  <section>
+    <h2>Technical Skills</h2>
+    <div class="skills-list">
+      ${skills.filter(g => has(g.items)).map(g => `
+      <div class="skill-item"><span class="bold">${e(g.category)}:</span> ${g.items.map(i => e(i.name)).join(", ")}</div>
+      `).join("")}
+    </div>
+  </section>` : ""}
+</div>
+</body>
+</html>`;
+  }
+  
   // ── Portfolio theme: Developer ──
 
   function buildPortfolioDeveloper(profile) {
@@ -2113,7 +2407,7 @@ function buildPortfolioMinimal(profile) {
   }
   // ── Showcase page: Resume ──
 
-  function buildResumeShowcase() {
+function buildResumeShowcase() {
     return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -2171,6 +2465,7 @@ function buildPortfolioMinimal(profile) {
       <h1>Resume Themes</h1>
       <p class="subtitle">Print-ready, ATS-compliant resumes. Pure HTML+CSS, zero JavaScript. Edit profile.json, run the build, print to PDF.</p>
       <div class="theme-grid">
+        
         <div class="theme-card">
           <div class="theme-thumb">&#128196;</div>
           <div class="theme-info">
@@ -2182,6 +2477,31 @@ function buildPortfolioMinimal(profile) {
             </div>
           </div>
         </div>
+
+        <div class="theme-card">
+          <div class="theme-thumb">&#128188;</div>
+          <div class="theme-info">
+            <h3>Modern</h3>
+            <p>Contemporary two-column sidebar layout. Features clean visual separation and minimal blue color accents.</p>
+            <div class="theme-links">
+              <a href="themes/modern.html" class="btn-primary">Preview</a>
+              <a href="themes/modern.html" class="btn-outline" onclick="window.open(this.href);setTimeout(function(){window.open(this.href).print()},500);return false;">Print</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="theme-card">
+          <div class="theme-thumb">&#128209;</div>
+          <div class="theme-info">
+            <h3>Compact</h3>
+            <p>Maximum information density. Single-column, tight spacing, highly optimized to fit extensive experience on one page.</p>
+            <div class="theme-links">
+              <a href="themes/compact.html" class="btn-primary">Preview</a>
+              <a href="themes/compact.html" class="btn-outline" onclick="window.open(this.href);setTimeout(function(){window.open(this.href).print()},500);return false;">Print</a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <footer>
@@ -2304,6 +2624,13 @@ function buildPortfolioShowcase() {
   // Resume themes
   fs.writeFileSync(path.join(resumeDir, "classic.html"), buildResumeClassic(profile), "utf-8");
   console.log("\nBuilt resume/themes/classic.html");
+
+  // NEW: Build and write Modern & Compact resume themes
+  fs.writeFileSync(path.join(resumeDir, "modern.html"), buildResumeModern(profile), "utf-8");
+  console.log("Built resume/themes/modern.html");
+  
+  fs.writeFileSync(path.join(resumeDir, "compact.html"), buildResumeCompact(profile), "utf-8");
+  console.log("Built resume/themes/compact.html");
 
   // Portfolio themes
   fs.writeFileSync(path.join(portfolioDir, "developer.html"), buildPortfolioDeveloper(profile), "utf-8");
