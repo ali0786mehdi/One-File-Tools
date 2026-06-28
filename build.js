@@ -206,14 +206,14 @@ function buildPillarCards() {
     {
       id: "resume",
       title: "One File Resume",
-      count: "1 theme",
+      count: "3 themes",
       desc: "ATS-friendly resume themes from a single JSON file. Zero JS, A4 print-ready.",
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg>'
     },
     {
       id: "portfolio",
       title: "One File Portfolio",
-      count: "1 theme",
+      count: "3 themes",
       desc: "Developer portfolio themes from a single JSON file. Dark/light, responsive.",
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg>'
     },
@@ -313,10 +313,15 @@ function buildPortfolioCards() {
 
 // Resume & portfolio theme data for the template
 const resumeThemes = [
-  { id: "classic", name: "Classic", description: "Clean single-column layout. ATS-compliant, zero JavaScript, A4 print-ready. System fonts only.", file: "resume/themes/classic.html" }
+  { id: "classic", name: "Classic", description: "Clean single-column layout. ATS-compliant, zero JavaScript, A4 print-ready. System fonts only.", file: "resume/themes/classic.html" },
+  { id: "modern", name: "Modern", description: "Contemporary two-column sidebar layout. Features clean visual separation and minimal blue color accents.", file: "resume/themes/modern.html" },
+  { id: "compact", name: "Compact", description: "Maximum information density. Single-column, tight spacing, highly optimized for 1 page.", file: "resume/themes/compact.html" }
 ];
+
 const portfolioThemes = [
-  { id: "developer", name: "Developer", description: "Terminal/IDE aesthetic with JetBrains Mono, dark/light mode toggle, IntersectionObserver animations, 20+ inline SVG icons.", file: "portfolio/themes/developer.html" }
+  { id: "developer", name: "Developer", description: "Terminal/IDE aesthetic with JetBrains Mono, dark/light mode toggle, IntersectionObserver animations.", file: "portfolio/themes/developer.html" },
+  { id: "minimal", name: "Minimal", description: "Ultra-clean single-page layout. Fast-loading, typography-driven, and content-focused.", file: "portfolio/themes/minimal.html" },
+  { id: "designer", name: "Designer", description: "Visual-first, image-heavy approach. Features large project thumbnails and elegant typography.", file: "portfolio/themes/designer.html" }
 ];
 
 // Build JSON data for the script block (used by modal + search)
